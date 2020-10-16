@@ -28,6 +28,13 @@ us_init() {
   echo ""
 }
 
+us_is_default_argument() {
+  if [ "$1" = "" -o "$1" = "." ]; then
+    return 0 # true when checked in a "if"
+  fi
+  return 1 # false when checked in a "if"
+}
+
 us_set_package_info() {
 
   PACKAGE_OWNER="$1"
@@ -38,22 +45,22 @@ us_set_package_info() {
   
   # Fallback to UPDATER package (the one containing this file) when the first two
   # arguments are empty
-  if [ "$PACKAGE_OWNER" = "" ]; then
+  if us_is_default_argument "$PACKAGE_OWNER"; then
     PACKAGE_OWNER="$PACKAGE_UPDATER_OWNER"
   fi
-  if [ "$PACKAGE_NAME" = "" ]; then
+  if us_is_default_argument "$PACKAGE_NAME"; then
     PACKAGE_NAME="$PACKAGE_UPDATER_NAME"
   fi
 
-  if [ "$PACKAGE_PATTERN" = "" ]; then
+  if us_is_default_argument "$PACKAGE_PATTERN"; then
     PACKAGE_PATTERN="$PACKAGE_NAME"
   fi
 
-  if [ "$PACKAGE_TYPE" = "" ]; then
+  if us_is_default_argument "$PACKAGE_TYPE"; then
     PACKAGE_TYPE="gz.tar"
   fi
 
-  if [ "$PACKAGE_SIMPLENAME" = "" ]; then
+  if us_is_default_argument "$PACKAGE_SIMPLENAME"; then
     PACKAGE_SIMPLENAME="$PACKAGE_NAME"
   fi
 
@@ -213,7 +220,7 @@ us_do_for_other() {
   us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
   us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
   us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' uudecode.xz
-  us_package_do "$1" pocomane MiSTer_webmenu_package '' '' 'webmenu'
+  us_package_do "$1" pocomane MiSTer_webmenu_package . . 'webmenu'
   # TODO : add ther packages
 }
 
