@@ -17,8 +17,8 @@ matrix:
 deploy:
   provider: releases
   api_key: $GITHUB_API_KEY
-#  file_glob: true
-  file: "MiSTer_misc.tar.gz"
+  file_glob: true
+  file: "MiSTer_misc*"
   skip_cleanup: true
 
 branches:
@@ -27,4 +27,5 @@ branches:
 
 script:
   - tar -czf MiSTer_misc.tar.gz MiSTer_misc.sh README.md
+  - ./MiSTer_misc.sh show_shortcut > MiSTer_misc_update.sh
 
