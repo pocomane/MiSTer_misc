@@ -34,14 +34,14 @@ set_project_info() {
   PACKAGE_PATTERN="$3"
   PACKAGE_TYPE="$4"
   
+  # Fallback to UPDATER package (the one containing this file)
   if [ "$PACKAGE_OWNER" = "" ]; then
     PACKAGE_OWNER="$PACKAGE_UPDATER_OWNER"
   fi
-  
   if [ "$PACKAGE_NAME" = "" ]; then
     PACKAGE_NAME="$PACKAGE_UPDATER_NAME"
   fi
-  
+
   if [ "$PACKAGE_PATTERN" = "" ]; then
     PACKAGE_PATTERN="$PACKAGE_NAME"
   fi
@@ -158,12 +158,19 @@ wk_finish(){
   echo "Done."
 }
 
+wk_do_for_package() {
+  ACTION="$1"
+  shift
+  set_project_info $@
+  "wk_$ACTION"
+}
+
 # PACKAGE LIST
 wk_do_for_all() {
-  set_project_info ; "wk_$1"
-  set_project_info pocomane webkeyboard 'arm.*tar.gz' ; "wk_$1"
-  # set_project_info nilp0inter MiSTer_WebMenu 'webmenu.sh' installer ; "wk_$1"
-  set_project_info pocomane MiSTer_Batch_Control 'mbc' bare ; "wk_$1"
+  wk_do_for_package "$1" # Fallback to UPDATER package (the one containing this file)
+  wk_do_for_package "$1" pocomane webkeyboard 'arm.*tar.gz'
+  wk_do_for_package "$1" pocomane MiSTer_Batch_Control 'mbc' bare
+  # wk_do_for_package "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
   # TODO : add ther packages
 }
 
