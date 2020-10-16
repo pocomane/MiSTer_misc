@@ -128,18 +128,12 @@ cat << EOF
     exit 126
   fi
 
-  if [[ -x "$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME" ]]; then
-    "$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME" update
-  else
-
-    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    # You can simply run the following command instead of running this file
-    #
-    curl -L -k "$PACKAGE_REPO_CONTENT/master/$PACKAGE_DEFAULT_SCRIPT_NAME" | bash -s update
-    #
-    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-  fi
+  # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  # You can simply run the following command instead of running this file
+  #
+  curl -L -k "$PACKAGE_REPO_CONTENT/master/$PACKAGE_DEFAULT_SCRIPT_NAME" | bash -s update
+  #
+  # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   X=("\${PIPESTATUS[@]}")
   EXIT_CODE=\${X[0]}
