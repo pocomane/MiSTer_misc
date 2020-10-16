@@ -252,6 +252,7 @@ wk_main_dispatch() {
          ;;
       "internal_installer_for_update")
          wk_do_for_other install          # it will call wk_install
+         wk_do_for_all config           # it will call wk_config
          ;;
       "config")
          wk_do_for_all config           # it will call wk_config
