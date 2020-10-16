@@ -18,7 +18,7 @@ deploy:
   provider: releases
   api_key: $GITHUB_API_KEY
   file_glob: true
-  file: "MiSTer_misc*"
+  file: "release/*"
   skip_cleanup: true
 
 branches:
@@ -26,7 +26,8 @@ branches:
     - master
 
 script:
+  - mkdir -p release
   - chmod ugo+x ./MiSTer_misc.sh
-  - tar -czf MiSTer_misc.tar.gz MiSTer_misc.sh README.md
-  - ./MiSTer_misc.sh show_shortcut > MiSTer_misc_update.sh
+  - tar -czf release/MiSTer_misc.tar.gz MiSTer_misc.sh README.md
+  - ./MiSTer_misc.sh show_shortcut > release/MiSTer_misc_update.sh
 
