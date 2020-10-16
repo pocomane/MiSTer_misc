@@ -146,7 +146,7 @@ EOF
 wk_config() {
 
   # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
-  if [ "$PACKAGE_NAME" = "$PACKAGE_UPDATER_OWNER" -a "$PACAKGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
+  if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACAKGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
     wk_show_shortcut > "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
     ln -s "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
   fi
