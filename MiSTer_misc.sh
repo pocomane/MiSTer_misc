@@ -1,15 +1,14 @@
 #/usr/bin/env bash
 
+# TREE_PATH="/media/fat"
 TREE_PATH="/media/data/temp/MiSTer_misc_test"
 SCRIPT_SUB="Scripts"
 MISC_SUB="misc"
 PACKAGE_UPDATER_OWNER="pocomane"
 PACKAGE_UPDATER_NAME="MiSTer_misc"
-# TREE_PATH="/media/fat"
-# SCRIPT_SUB="Scripts"
-# MISC_SUB="misc"
-# PACKAGE_UPDATER_OWNER="pocomane"
-# PACKAGE_UPDATER_NAME="MiSTer_misc"
+HOOK_SUB="hook"
+ACTION_HOOK="action"
+BOOT_HOOK="boot"
 
 # ---------------------------------------------------------------------------------
 
@@ -58,7 +57,9 @@ set_project_info() {
   PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_WORKING_DIR="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
-  PACKAGE_DEFAULT_SCRIPT="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME/$PACKAGE_DEFAULT_SCRIPT_NAME"
+  PACKAGE_DEFAULT_SCRIPT="$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME"
+  PACKAGE_ACTION="$PACKAGE_WORKING_DIR/$HOOK_SUB/$ACTION_HOOK"
+  PACKAGE_BOOT="$PACKAGE_WORKING_DIR/$HOOK_SUB/$BOOT_HOOK"
 }
 
 wk_remove() {
@@ -155,10 +156,16 @@ wk_config() {
 
   # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
   if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACKAGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
-    TARGET_SCRIPT="$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh"
-    wk_show_shortcut > "$TARGET_SCRIPT" ||die
-    wk_generate_wrapper "$TARGET_SCRIPT" > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+    mkdir -p "$PACKAGE_ACTION"
+    wk_show_shortcut > "$PACKAGE_ACTION/update.sh" ||die
   fi
+
+  # Add action hooks in the Script dir
+  for HOOK in $(ls "$PACKAGE_ACTION") ; do
+    wk_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK.sh" ||die
+  done
+
+  # TODO : boot hooks ?
 
   # TODO : other configs ?
 }
