@@ -19,7 +19,7 @@ deploy:
   api_key: $GITHUB_API_KEY
 #  file_glob: true
   file: "MiSTer_misc.tar.gz"
-#  skip_cleanup: true
+  skip_cleanup: true
 
 branches:
   only:
