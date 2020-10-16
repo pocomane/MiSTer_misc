@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 
-# TREE_PATH="/media/fat"
-TREE_PATH="/media/data/temp/MiSTer_misc_test"
+TREE_PATH="/media/fat"
+# TREE_PATH="/media/data/temp/MiSTer_misc_test"
 SCRIPT_SUB="Scripts"
 MISC_SUB="misc"
 PACKAGE_UPDATER_OWNER="pocomane"
