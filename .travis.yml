@@ -23,7 +23,7 @@ deploy:
 
 branches:
   only:
-    - main
+    - master
 
 script:
   - tar -czf MiSTer_misc.tar.gz MiSTer_misc.sh README.md
