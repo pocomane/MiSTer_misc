@@ -48,7 +48,7 @@ us_set_package_info() {
   fi
   
   if [ "$PACKAGE_TYPE" = "" ]; then
-    PACKAGE_TYPE="tgz"
+    PACKAGE_TYPE="gz.tar"
   fi
   
   SCRIPT_DIR="$TREE_PATH/$SCRIPT_SUB"
@@ -93,10 +93,13 @@ us_install(){
     "bare")
       echo -n "" # nothing to do
       ;;
-    "installer")
-      "$TMPFILE"
+    "uudecode.xz")
+      uudecode -o "$TMPFILE.xz" "$TMPFILE" ||die "can not unpack $PACKAGE_INFO"
+      rm "$TMPFILE" ||die "can not unpack $PACKAGE_INFO"
+      xz --decompress "$TMPFILE.xz" ||die "can not unpack $PACKAGE_INFO"
+      cp "$TMPFILE" "$PACKAGE_NAME" ||die "can not unpack $PACKAGE_INFO"
       ;;
-    "tgz")
+    "gz.tar")
       $TAR -xzf "$TMPFILE" ||die "can not unpack $PACKAGE_INFO"
       ;;
     "tar")
@@ -204,7 +207,7 @@ us_package_do() {
 us_do_for_other() {
   us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
   us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
-  # us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
+  us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' uudecode.xz
   # TODO : add ther packages
 }
 
