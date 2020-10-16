@@ -22,11 +22,13 @@ die(){
   exit 127
 }
 
-wk_init() {
+# All the function use the following suffix (from "Updater Script"): us_
+
+us_init() {
   echo ""
 }
 
-set_project_info() {
+us_set_package_info() {
 
   PACKAGE_OWNER="$1"
   PACKAGE_NAME="$2"
@@ -62,12 +64,12 @@ set_project_info() {
   PACKAGE_BOOT="$PACKAGE_WORKING_DIR/$HOOK_SUB/$BOOT_HOOK"
 }
 
-wk_remove() {
+us_remove() {
   echo "Removing $PACKAGE_NAME..."
   rm -fR "$PACKAGE_WORKING_DIR"
 }
 
-wk_install(){
+us_install(){
   echo "Updating $PACKAGE_NAME..."
 
   mkdir -p "$PACKAGE_WORKING_DIR" ||die "can not create the working directory '$PACKAGE_WORKING_DIR'"
@@ -105,7 +107,7 @@ wk_install(){
   rm -f "$TMPFILE"
 }
 
-wk_show_shortcut() {
+us_show_shortcut() {
 cat << EOF
 #!/usr/bin/env bash
 
@@ -144,7 +146,7 @@ cat << EOF
 EOF
 }
 
-wk_generate_wrapper() {
+us_generate_wrapper() {
 cat << EOF
 #!/usr/bin/env bash
   cd "$PACKAGE_WORKING_DIR" || exit 127
@@ -152,17 +154,17 @@ cat << EOF
 EOF
 }
 
-wk_config() {
+us_config() {
 
   # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
   if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACKAGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
     mkdir -p "$PACKAGE_ACTION"
-    wk_show_shortcut > "$PACKAGE_ACTION/update.sh" ||die
+    us_show_shortcut > "$PACKAGE_ACTION/update.sh" ||die
   fi
 
   # Add action hooks in the Script dir
   for HOOK in $(ls "$PACKAGE_ACTION") ; do
-    wk_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK.sh" ||die
+    us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK.sh" ||die
   done
 
   # TODO : boot hooks ?
@@ -170,35 +172,35 @@ wk_config() {
   # TODO : other configs ?
 }
 
-wk_finish(){
+us_finish(){
   echo "Done."
 }
 
-wk_package_do() {
+us_package_do() {
   ACTION="$1"
   shift
-  set_project_info $@
-  "wk_$ACTION"
+  us_set_package_info $@
+  "us_$ACTION"
 }
 
 # PACKAGE LIST
-wk_do_for_other() {
-  wk_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
-  wk_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
-  # wk_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
+us_do_for_other() {
+  us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
+  us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
+  # us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
   # TODO : add ther packages
 }
 
-wk_do_for_updater() {
-  wk_package_do "$1" # This will fallback to the UPDATER package (i.e. the one containing this file)
+us_do_for_updater() {
+  us_package_do "$1" # This will fallback to the UPDATER package (i.e. the one containing this file)
 }
 
-wk_do_for_all() {
-  wk_do_for_updater $1
-  wk_do_for_other $1
+us_do_for_all() {
+  us_do_for_updater $1
+  us_do_for_other $1
 }
 
-wk_info(){
+us_info(){
   echo "Usage Summary."
   echo "To download and update the software:"
   echo "  $0 update"
@@ -210,67 +212,67 @@ wk_info(){
   echo "  $0 show_shortcut"
 }
 
-wk_is_updater_installed() {
-  set_project_info
+us_is_updater_installed() {
+  us_set_package_info
   if [[ -x "$PACKAGE_DEFAULT_SCRIPT" ]]; then
     return 0 # true when checked in a "if"
   fi
   return 1 # false when checked in a "if"
 }
 
-wk_run_installed_updater() {
-  set_project_info
+us_run_installed_updater() {
+  us_set_package_info
 
   # For release
   "$PACKAGE_DEFAULT_SCRIPT" $@ ||die
 
   # For development
-  # wk_main_dispatch $@
+  # us_main_dispatch $@
 }
 
-wk_main_dispatch() {
+us_main_dispatch() {
   if [ "$#" = "0" ]; then
-    wk_info
+    us_info
   else
     case $1 in
 
       "update")
-         set_project_info
+         us_set_package_info
          mkdir -p "$SCRIPT_DIR" ||die "can not create the script directory '$SCRIPT_DIR'"
 
-         if wk_is_updater_installed; then
-           wk_run_installed_updater remove
+         if us_is_updater_installed; then
+           us_run_installed_updater remove
          else
-           wk_do_for_all remove  # it will call wk_remove
+           us_do_for_all remove  # it will call us_remove
          fi
 
-         wk_do_for_updater install
-         wk_run_installed_updater internal_installer_for_update
+         us_do_for_updater install
+         us_run_installed_updater internal_installer_for_update
          ;;
       "remove")
-         wk_do_for_all remove           # it will call wk_remove
+         us_do_for_all remove           # it will call us_remove
          ;;
       "internal_installer_for_update")
-         wk_do_for_other install          # it will call wk_install
-         wk_do_for_all config           # it will call wk_config
+         us_do_for_other install          # it will call us_install
+         us_do_for_all config           # it will call us_config
          ;;
       "config")
-         wk_do_for_all config           # it will call wk_config
+         us_do_for_all config           # it will call us_config
          ;;
       "show_shortcut")
-         set_project_info
-         wk_show_shortcut
+         us_set_package_info
+         us_show_shortcut
          ;;
       *)
          echo "Invalid option"
-         wk_info
+         us_info
          false ||die "invalid option"
          ;;
     esac
   fi
 }
 
-wk_init
-wk_main_dispatch $@
-wk_finish
+us_init
+us_main_dispatch $@
+us_finish
 
