@@ -20,8 +20,10 @@ deploy:
 #  file_glob: true
   file: "MiSTer_misc.tar.gz"
 #  skip_cleanup: true
-  on:
-    branch: main
+
+branches:
+  only:
+    - main
 
 script:
   - tar -czf MiSTer_misc.tar.gz MiSTer_misc.sh README.md
