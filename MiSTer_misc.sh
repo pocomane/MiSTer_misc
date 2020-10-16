@@ -113,8 +113,8 @@ cat << EOF
     exit 126
   fi
 
-  if [[ -x "$WORKDIR/$UPDATER_NAME" ]]; then
-    "$WORKDIR/$UPDATER_NAME" update
+  if [[ -x "$WORKDIR/$PACKAGE_UPDATER_NAME" ]]; then
+    "$WORKDIR/$PACKAGE_UPDATER_NAME" update
   else
 
     # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -142,7 +142,7 @@ EOF
 }
 
 wk_config() {
-  wk_show_shortcut >> "$SCRIPT_DIR/${UPDATER_NAME}_update.sh" ||die
+  wk_show_shortcut >> "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
   # TODO : other configs ?
 }
 
