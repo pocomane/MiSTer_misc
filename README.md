@@ -1,2 +1,61 @@
+
 # MiSTer_misc
-Script to install miscellaneous software on the MiSTer FPGA project.
+
+This is a script to install and update miscellaneous software on a target device.
+The default distribution is meant to be used on a MiSTer FPGA, however it is
+designed to be easly adapted to other systems. Read the dedicated section to more
+information on such scenarios, the rest of this documentation will assume a
+MiSTer FPGA target with default miscellaneous software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+# Goals
+
+The goals of the script are:
+
+- To be very simple: you can read and fully understand it in minutes
+- Automatically create wrapper scripts to recall package functionality
+- Each package have a contained repository on github
+- The packages are distributed by github Release pages
+- Simple and multiple package formats
+
+Work in progress : TODO : automatic boot script ?
+
+# Installation
+
+To install all the software, you can download the `MiSTer_misc_update.sh` to
+your device and run it. Alternatively you can run
+
+```
+curl -L -k "https://raw.githubusercontent.com/pocomane/MiSTer_misc/master/MiSTer_misc.sh" | bash -s update
+```
+
+in a shell on the target device.
+
+Both the methods will download the last built release and install it in the
+default path: `/media/fat/misc/MiSTer_misc`. It will also generate some script 
+in the default path: `/media/fat/Scripts`. One of this is the updater script
+itself: `/media/fat/Scripts/MiSTer_misc_update.sh`.
+
+# Contained software
+
+Work in progress.
+
+# How it works
+
+Work in progress.
+
+# Package Specification
+
+Work in progress.
+
+# Adapt the script to other devices
+
+Work in progress.
+
