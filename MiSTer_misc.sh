@@ -144,7 +144,13 @@ EOF
 }
 
 wk_config() {
-  echo -n ""
+
+  # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
+  if [ "$PACKAGE_NAME" = "$PACKAGE_UPDATER_OWNER" -a "$PACAKGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
+    wk_show_shortcut > "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+    ln -s "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+  fi
+
   # TODO : other configs ?
 }
 
@@ -204,8 +210,6 @@ wk_main_dispatch() {
          wk_do_for_all install          # it will call wk_install
          ;;
       "config")
-         set_project_info
-         wk_show_shortcut > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
          wk_do_for_all config           # it will call wk_config
          ;;
       "show_shortcut")
