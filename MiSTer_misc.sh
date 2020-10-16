@@ -164,7 +164,7 @@ us_config() {
 
   # Add action hooks in the Script dir
   for HOOK in $(ls "$PACKAGE_ACTION") ; do
-    us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK.sh" ||die
+    us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
   done
 
   # TODO : boot hooks ?
