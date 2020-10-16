@@ -144,7 +144,7 @@ EOF
 }
 
 wk_config() {
-  wk_show_shortcut > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+  echo -n ""
   # TODO : other configs ?
 }
 
@@ -204,6 +204,8 @@ wk_main_dispatch() {
          wk_do_for_all install          # it will call wk_install
          ;;
       "config")
+         set_project_info
+         wk_show_shortcut > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
          wk_do_for_all config           # it will call wk_config
          ;;
       "show_shortcut")
