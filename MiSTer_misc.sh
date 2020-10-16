@@ -113,8 +113,8 @@ cat << EOF
     exit 126
   fi
 
-  if [[ -x "$WORKDIR/$PACKAGE_UPDATER_NAME" ]]; then
-    "$WORKDIR/$PACKAGE_UPDATER_NAME" update
+  if [[ -x "$PACKAGE_WORKING_DIR/$PACKAGE_UPDATER_NAME" ]]; then
+    "$PACKAGE_WORKING_DIR/$PACKAGE_UPDATER_NAME" update
   else
 
     # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -203,6 +203,10 @@ wk_main_dispatch() {
          ;;
       "config")
          wk_do_for_all config           # it will call wk_config
+         ;;
+      "show_shortcut")
+         set_project_info
+         wk_show_shortcut
          ;;
       *)
          echo "Invalid option"
