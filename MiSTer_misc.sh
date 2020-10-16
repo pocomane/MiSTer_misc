@@ -57,7 +57,8 @@ set_project_info() {
   PACKAGE_REPO_API="https://api.github.com/repos/$PACKAGE_REPO"
   PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_WORKING_DIR="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME"
-  PACKAGE_DEFAULT_SCRIPT="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME/${PACKAGE_NAME}.sh"
+  PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
+  PACKAGE_DEFAULT_SCRIPT="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME/$PACKAGE_DEFAULT_SCRIPT_NAME"
 }
 
 wk_remove() {
@@ -121,7 +122,7 @@ cat << EOF
     # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     # You can simply run the following command instead of running this file
     #
-    curl -L -k "$PACKAGE_REPO_CONTENT/master/util/MiSTer_misc.sh" | bash -s update
+    curl -L -k "$PACKAGE_REPO_CONTENT/master/$PACKAGE_DEFAULT_SCRIPT_NAME" | bash -s update
     #
     # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
