@@ -3,16 +3,17 @@
 TREE_PATH="/media/data/temp/MiSTer_misc_test"
 SCRIPT_SUB="Scripts"
 MISC_SUB="misc"
-TARGET_ARCH="arm"
-TMPFILE="./.download.tmp"
+PACKAGE_UPDATER_OWNER="pocomane"
+PACKAGE_UPDATER_NAME="MiSTer_misc"
 # TREE_PATH="/media/fat"
 # SCRIPT_SUB="Scripts"
 # MISC_SUB="misc"
-# TARGET_ARCH="arm"
-# TMPFILE="./.download.tmp"
+# PACKAGE_UPDATER_OWNER="pocomane"
+# PACKAGE_UPDATER_NAME="MiSTer_misc"
 
 # ---------------------------------------------------------------------------------
 
+TMPFILE="./.download.tmp"
 CURL=" curl -L -k -s "
 # TAR=" tar --no-same-owner --no-same-permissions "
 TAR=" tar --no-same-owner "
@@ -34,11 +35,11 @@ set_project_info() {
   PACKAGE_TYPE="$4"
   
   if [ "$PACKAGE_OWNER" = "" ]; then
-    PACKAGE_OWNER="pocomane"
+    PACKAGE_OWNER="$PACKAGE_UPDATER_OWNER"
   fi
   
   if [ "$PACKAGE_NAME" = "" ]; then
-    PACKAGE_NAME="MiSTer_misc"
+    PACKAGE_NAME="$PACKAGE_UPDATER_NAME"
   fi
   
   if [ "$PACKAGE_PATTERN" = "" ]; then
@@ -164,6 +165,8 @@ wk_info(){
   echo "  $0 update"
   echo "To remove the software:"
   echo "  $0 remove"
+  echo "To configure the software:"
+  echo "  $0 config"
   echo "To view a simple Updater Shortcut script:"
   echo "  $0 show_shortcut"
 }
@@ -198,7 +201,7 @@ wk_main_dispatch() {
       "internal_installer_for_update")
          wk_do_for_all install          # it will call wk_install
          ;;
-      "conifg")
+      "config")
          wk_do_for_all config           # it will call wk_config
          ;;
       *)
