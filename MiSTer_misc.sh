@@ -34,8 +34,10 @@ us_set_package_info() {
   PACKAGE_NAME="$2"
   PACKAGE_PATTERN="$3"
   PACKAGE_TYPE="$4"
+  PACKAGE_SIMPLENAME="$5"
   
-  # Fallback to UPDATER package (the one containing this file)
+  # Fallback to UPDATER package (the one containing this file) when the first two
+  # arguments are empty
   if [ "$PACKAGE_OWNER" = "" ]; then
     PACKAGE_OWNER="$PACKAGE_UPDATER_OWNER"
   fi
@@ -46,11 +48,15 @@ us_set_package_info() {
   if [ "$PACKAGE_PATTERN" = "" ]; then
     PACKAGE_PATTERN="$PACKAGE_NAME"
   fi
-  
+
   if [ "$PACKAGE_TYPE" = "" ]; then
     PACKAGE_TYPE="gz.tar"
   fi
-  
+
+  if [ "$PACKAGE_SIMPLENAME" = "" ]; then
+    PACKAGE_SIMPLENAME="$PACKAGE_NAME"
+  fi
+
   SCRIPT_DIR="$TREE_PATH/$SCRIPT_SUB"
 
   PACKAGE_REPO="$PACKAGE_OWNER/$PACKAGE_NAME"
@@ -69,7 +75,8 @@ us_remove() {
 
   # Remove action hooks in the Script dir
   for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-    rm -f "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
+    # Print error when not found, but DO NOT stop the process !
+    rm "$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
   done
 
   # Remove package content
@@ -179,7 +186,7 @@ us_config() {
 
     # Add action hooks in the Script dir
     for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
+      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
     done
   fi
 
@@ -193,7 +200,11 @@ us_finish(){
 us_package_do() {
   ACTION="$1"
   shift
+
+  # This will fallback to the UPDATER package (i.e. the one containing this
+  # file) when no other parameter are given
   us_set_package_info $@
+
   "us_$ACTION"
 }
 
@@ -202,12 +213,12 @@ us_do_for_other() {
   us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
   us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
   us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' uudecode.xz
-  us_package_do "$1" pocomane MiSTer_webmenu_package
+  us_package_do "$1" pocomane MiSTer_webmenu_package '' '' 'webmenu'
   # TODO : add ther packages
 }
 
 us_do_for_updater() {
-  us_package_do "$1" # This will fallback to the UPDATER package (i.e. the one containing this file)
+  us_package_do "$1"
 }
 
 us_do_for_all() {
