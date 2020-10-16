@@ -194,7 +194,7 @@ wk_do_for_updater() {
 }
 
 wk_do_for_all() {
-  wk_do_for_updater
+  wk_do_for_updater $1
   wk_do_for_other $1
 }
 
