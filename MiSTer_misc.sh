@@ -118,8 +118,8 @@ cat << EOF
     exit 126
   fi
 
-  if [[ -x "$PACKAGE_WORKING_DIR/$PACKAGE_UPDATER_NAME" ]]; then
-    "$PACKAGE_WORKING_DIR/$PACKAGE_UPDATER_NAME" update
+  if [[ -x "$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME" ]]; then
+    "$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME" update
   else
 
     # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
