@@ -142,7 +142,7 @@ EOF
 }
 
 wk_config() {
-  wk_show_shortcut >> "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+  wk_show_shortcut > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
   # TODO : other configs ?
 }
 
