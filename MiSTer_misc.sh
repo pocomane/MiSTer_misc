@@ -147,8 +147,8 @@ EOF
 wk_generate_wrapper() {
 cat << EOF
 #!/usr/bin/env bash
-  cd "$SCRIPT_DIR" || exit 127
-  "./$1" || exit 127
+  cd "$PACKAGE_WORKING_DIR" || exit 127
+  "$1" || exit 127
 EOF
 }
 
