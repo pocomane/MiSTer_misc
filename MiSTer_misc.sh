@@ -202,6 +202,7 @@ us_do_for_other() {
   us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
   us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
   us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' uudecode.xz
+  us_package_do "$1" pocomane MiSTer_webmenu_package
   # TODO : add ther packages
 }
 
