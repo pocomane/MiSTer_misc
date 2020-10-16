@@ -174,7 +174,7 @@ us_config() {
   if us_is_updater_package; then
     # This is done with a wrapper for other packages, however the Updater is
     # an exception since the "Shortcut" MUST work also withou any installation)
-    us_show_shortcut > "$SCRIPT_DIR/${PACKAGE_NAME}_updater.sh" ||die
+    us_show_shortcut > "$SCRIPT_DIR/${PACKAGE_NAME}_update.sh" ||die
   else
 
     # Add action hooks in the Script dir
