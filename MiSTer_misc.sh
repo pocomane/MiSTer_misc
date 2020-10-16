@@ -163,7 +163,7 @@ us_config() {
   fi
 
   # Add action hooks in the Script dir
-  for HOOK in $(ls "$PACKAGE_ACTION") ; do
+  for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
     us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
   done
 
