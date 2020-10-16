@@ -174,7 +174,7 @@ wk_finish(){
   echo "Done."
 }
 
-wk_do_for_package() {
+wk_package_do() {
   ACTION="$1"
   shift
   set_project_info $@
@@ -182,12 +182,20 @@ wk_do_for_package() {
 }
 
 # PACKAGE LIST
-wk_do_for_all() {
-  wk_do_for_package "$1" # Fallback to UPDATER package (the one containing this file)
-  wk_do_for_package "$1" pocomane webkeyboard 'arm.*tar.gz'
-  wk_do_for_package "$1" pocomane MiSTer_Batch_Control 'mbc' bare
-  # wk_do_for_package "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
+wk_do_for_other() {
+  wk_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
+  wk_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
+  # wk_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' installer
   # TODO : add ther packages
+}
+
+wk_do_for_updater() {
+  wk_package_do "$1" # This will fallback to the UPDATER package (i.e. the one containing this file)
+}
+
+wk_do_for_all() {
+  wk_do_for_updater
+  wk_do_for_other $1
 }
 
 wk_info(){
@@ -202,6 +210,24 @@ wk_info(){
   echo "  $0 show_shortcut"
 }
 
+wk_is_updater_installed() {
+  set_project_info
+  if [[ -x "$PACKAGE_DEFAULT_SCRIPT" ]]; then
+    return 0 # true when checked in a "if"
+  fi
+  return 1 # false when checked in a "if"
+}
+
+wk_run_installed_updater() {
+  set_project_info
+
+  # For release
+  "$PACKAGE_DEFAULT_SCRIPT" $@ ||die
+
+  # For development
+  # wk_main_dispatch $@
+}
+
 wk_main_dispatch() {
   if [ "$#" = "0" ]; then
     wk_info
@@ -212,25 +238,20 @@ wk_main_dispatch() {
          set_project_info
          mkdir -p "$SCRIPT_DIR" ||die "can not create the script directory '$SCRIPT_DIR'"
 
-         if [[ -x "$PACKAGE_DEFAULT_SCRIPT" ]]; then # use the installed Remover if found
-           "$PACKAGE_DEFAULT_SCRIPT" remove ||die
-           set_project_info
-           wk_do_for_all install # it will call wk_install
-
-         else # otherwise fallback to the Remover in this script
+         if wk_is_updater_installed; then
+           wk_run_installed_updater remove
+         else
            wk_do_for_all remove  # it will call wk_remove
-           set_project_info
-           wk_do_for_all install # it will call wk_install
          fi
-         set_project_info
-         echo "Configuring installed packages..."
-         "$PACKAGE_DEFAULT_SCRIPT" config ||die
+
+         wk_do_for_updater install
+         wk_run_installed_updater internal_installer_for_update
          ;;
       "remove")
          wk_do_for_all remove           # it will call wk_remove
          ;;
       "internal_installer_for_update")
-         wk_do_for_all install          # it will call wk_install
+         wk_do_for_other install          # it will call wk_install
          ;;
       "config")
          wk_do_for_all config           # it will call wk_config
