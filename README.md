@@ -21,9 +21,10 @@ The goals of the script are:
 
 - To be very simple: you can read and fully understand it in minutes
 - Automatically create wrapper scripts to recall package functionality
+- To keep the filesystem clean: all the software is installed the `/media/fat/misc` folder
 - Each package have a contained repository on github
 - The packages are distributed by github Release pages
-- Simple and multiple package formats
+- Simple and multiple packages formats
 
 Work in progress : TODO : automatic boot script ?
 
