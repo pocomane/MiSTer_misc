@@ -143,12 +143,21 @@ cat << EOF
 EOF
 }
 
+wk_generate_wrapper() {
+cat << EOF
+#!/usr/bin/env bash
+  cd "$SCRIPT_DIR" || exit 127
+  "./$1" || exit 127
+EOF
+}
+
 wk_config() {
 
   # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
-  if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACAKGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
-    wk_show_shortcut > "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
-    ln -s "$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh" "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
+  if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACKAGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
+    TARGET_SCRIPT="$PACKAGE_WORKING_DIR/${PACKAGE_UPDATER_NAME}_update.sh"
+    wk_show_shortcut > "$TARGET_SCRIPT" ||die
+    wk_generate_wrapper "$TARGET_SCRIPT" > "$SCRIPT_DIR/${PACKAGE_UPDATER_NAME}_update.sh" ||die
   fi
 
   # TODO : other configs ?
