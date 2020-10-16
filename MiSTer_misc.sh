@@ -149,8 +149,12 @@ EOF
 us_generate_wrapper() {
 cat << EOF
 #!/usr/bin/env bash
-  cd "$PACKAGE_WORKING_DIR" || exit 127
-  "$1" || exit 127
+  cd "$PACKAGE_WORKING_DIR"
+  "$1"
+  EXIT_CODE="\$?"
+  read -n 1 -s -r -p "Press any key to continue"
+  echo ""
+  exit \$EXIT_CODE
 EOF
 }
 
