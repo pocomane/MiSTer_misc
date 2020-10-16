@@ -154,22 +154,28 @@ cat << EOF
 EOF
 }
 
+us_is_updater_package(){
+  if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACKAGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
+    return 0 # true when checked in a "if"
+  fi
+  return 1 # false when checked in a "if"
+}
+
 us_config() {
 
-  # Automatic generation of the updater script to be linked in the SCRIPT_DIR folder
-  if [ "$PACKAGE_OWNER" = "$PACKAGE_UPDATER_OWNER" -a "$PACKAGE_NAME" = "$PACKAGE_UPDATER_NAME" ]; then
-    mkdir -p "$PACKAGE_ACTION"
-    us_show_shortcut > "$PACKAGE_ACTION/update.sh" ||die
+  if us_is_updater_package; then
+    # This is done with a wrapper for other packages, however the Updater is
+    # an exception since the "Shortcut" MUST work also withou any installation)
+    us_show_shortcut > "$SCRIPT_DIR/${PACKAGE_NAME}_updater.sh" ||die
+  else
+
+    # Add action hooks in the Script dir
+    for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
+      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
+    done
   fi
 
-  # Add action hooks in the Script dir
-  for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-    us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
-  done
-
-  # TODO : boot hooks ?
-
-  # TODO : other configs ?
+  # TODO : other configs ? boot hooks ?
 }
 
 us_finish(){
