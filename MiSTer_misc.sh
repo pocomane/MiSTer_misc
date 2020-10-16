@@ -66,6 +66,13 @@ us_set_package_info() {
 
 us_remove() {
   echo "Removing $PACKAGE_NAME..."
+
+  # Remove action hooks in the Script dir
+  for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
+    rm -f "$SCRIPT_DIR/${PACKAGE_NAME}_$HOOK" ||die
+  done
+
+  # Remove package content
   rm -fR "$PACKAGE_WORKING_DIR"
 }
 
