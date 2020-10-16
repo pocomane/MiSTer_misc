@@ -55,6 +55,7 @@ set_project_info() {
   PACKAGE_REPO="$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_REPO_URL="https://github.com/$PACKAGE_REPO"
   PACKAGE_REPO_API="https://api.github.com/repos/$PACKAGE_REPO"
+  PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_WORKING_DIR="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME/${PACKAGE_NAME}.sh"
 }
@@ -117,12 +118,12 @@ cat << EOF
     "$PACKAGE_WORKING_DIR/$PACKAGE_UPDATER_NAME" update
   else
 
-    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     # You can simply run the following command instead of running this file
     #
-    curl -L -k https://raw.githubusercontent.com/pocomane/MiSTer_misc/master/util/MiSTer_misc.sh | bash -s update
+    curl -L -k "$PACKAGE_REPO_CONTENT/master/util/MiSTer_misc.sh" | bash -s update
     #
-    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   fi
 
