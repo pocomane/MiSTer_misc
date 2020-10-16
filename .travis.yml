@@ -26,6 +26,7 @@ branches:
     - master
 
 script:
+  - chmod ugo+x ./MiSTer_misc.sh
   - tar -czf MiSTer_misc.tar.gz MiSTer_misc.sh README.md
   - ./MiSTer_misc.sh show_shortcut > MiSTer_misc_update.sh
 
