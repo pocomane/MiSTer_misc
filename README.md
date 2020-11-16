@@ -46,6 +46,14 @@ itself: `/media/fat/Scripts/MiSTer_misc_update.sh`.
 
 # Contained software
 
+This is a list of the software that will be installed.
+
+- [webkeyboard](https://github.com/pocomane/webkeyboard) - It let you to
+  control the device from a remote keyboard. The scripts
+  `webkeyboard_start.sh` and `webkeyboard_stop.sh` will be created to launch
+  and stop the service. Connect http://ip.addes.of_the.device:8081 from any
+  computer in the network to send keystroks through the web.
+
 Work in progress.
 
 # How it works
