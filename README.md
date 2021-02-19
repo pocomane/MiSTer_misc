@@ -20,13 +20,10 @@ SOFTWARE.
 The features of the script are:
 
 - It is very simple: you can read and fully understand it in minutes
+- The packages are distributed as github repository (the release pages must be formatted in specific way)
 - It automatically creates wrapper scripts to recall package functionality
 - It keeps the filesystem clean: all the software is installed the `/media/fat/misc` folder
-- Each package have a contained repository on github
-- The packages are distributed by github Release pages
-- It supports multiple, simple packages formats
-
-Work in progress : TODO : automatic boot script ?
+- TODO : automatic boot script ???
 
 # Installation
 
@@ -54,8 +51,13 @@ This is a list of the software that will be installed.
   `webkeyboard_start.sh` and `webkeyboard_stop.sh` will be created to launch
   and stop the service. Connect http://ip.addes.of_the.device:8081 from any
   computer in the network to send keystroks through the web.
-
-Work in progress.
+- [webmenu with wrapper](https://github.com/pocomane/MiSTer_webmenu_package) - It
+  is a GUI served as a web-page. Connecting a browser from any computer to it, you
+  can launch core and roms, search your collection, etc. The script
+  `webmenu_start.sh` and `webmenu_stop.sh` will be created to start/stop the
+  app.
+- [mbc](https://github.com/pocomane/MiSTer_Batch_Control) - It is an utility to
+  control the MiSTer from the command line (e.g. launch a rom).
 
 # How it works
 
