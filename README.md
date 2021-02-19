@@ -30,8 +30,9 @@ Work in progress : TODO : automatic boot script ?
 
 # Installation
 
-To install all the software, you can download the `MiSTer_misc_update.sh` to
-your device and run it. Alternatively you can run
+To install all the software, you can download the
+[MiSTer_misc_update.sh](https://github.com/pocomane/MiSTer_misc/releases/latest/download/MiSTer_misc_update.sh)
+to your device and run it. Alternatively you can run
 
 ```
 curl -L -k "https://raw.githubusercontent.com/pocomane/MiSTer_misc/master/MiSTer_misc.sh" | bash -s update
