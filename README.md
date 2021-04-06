@@ -75,7 +75,9 @@ For each installed software, some functionality script are linked in the
 `Scripts` and `Links` directories to be easly recalled. The difference between
 the two directories is that the `Links` will contain proper links, while the
 `Scripts` one will contain wrapper script that perform some auxiliary work (
-change the current dir, and wait a keypress at the end).
+change the current dir, and wait a keypress at the end). Note, by default,
+`Scripts` and `Links` directories are the same, so you get a single directory
+with a mix of wrappers and links.
 
 TODO : implement automatic boot script ! ?
 
