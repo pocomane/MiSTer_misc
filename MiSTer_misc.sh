@@ -1,8 +1,7 @@
 #/usr/bin/env bash
 
-TREE_PATH="/media/fat"
-SCRIPT_SUB="Scripts"
-MISC_SUB="misc"
+SCRIPT_DIR="/media/fat/Scripts"
+MISC_DIR="/media/fat/misc"
 PACKAGE_UPDATER_OWNER="pocomane"
 PACKAGE_UPDATER_NAME="MiSTer_misc"
 PACKAGE_UPDATER_TYPE="github.master"
@@ -12,7 +11,8 @@ BOOT_HOOK="boot"
 QUICK_HOOK_NAME="__unnamed__"
 
 # DEBUG="true"
-# DEBUG_TREE_PATH="/media/data/temp/MiSTer_misc_test"
+# DEBUG_SCRIPT_DIR="/media/data/temp/MiSTer_misc_test/Scripts"
+# DEBUG_MISC_SUB="/media/data/temp/MiSTer_misc_test/misc"
 
 # ---------------------------------------------------------------------------------
 
@@ -43,7 +43,8 @@ us_is_default_argument() {
 us_set_package_info() {
 
   if [ "$DEBUG" == "true" ]; then
-    TREE_PATH="$DEBUG_TREE_PATH"
+    SCRIPT_DIR="$DEBUG_SCRIPT_DIR"
+    MISC_DIR="$DEBUG_MISC_SUB"
   fi
 
   PACKAGE_OWNER="$1"
@@ -77,13 +78,11 @@ us_set_package_info() {
     PACKAGE_SIMPLENAME="$PACKAGE_NAME"
   fi
 
-  SCRIPT_DIR="$TREE_PATH/$SCRIPT_SUB"
-
   PACKAGE_REPO_SERVER="https://github.com"
   PACKAGE_REPO="$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_REPO_URL="$PACKAGE_REPO_SERVER/$PACKAGE_REPO"
   PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
-  PACKAGE_WORKING_DIR="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME"
+  PACKAGE_WORKING_DIR="$MISC_DIR/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
   PACKAGE_DEFAULT_SCRIPT="$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME"
   PACKAGE_ACTION="$PACKAGE_WORKING_DIR/$HOOK_SUB/$ACTION_HOOK"

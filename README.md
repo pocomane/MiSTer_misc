@@ -82,10 +82,9 @@ change the following variables in the main script
 - PACKAGE_UPDATER_OWNER and NAME define the github repo of the owner of the
   uptade script itself; you should place here you github username (in OWNER)
   and forked repo name (in NAME);
-- TREE_PATH and MISC_SUB together defines where the software will be installed; the
-  desitnation is the MISC_SUB folder in the TREE_PATH directory;
-- SCRIPT_SUB defines the path for the `Scripts` folder (it will be
-  TREE_PATH/SCRIPT_SUB);
+- MISC_DIR defines the `Installation` directory, where the software will be
+  copied;
+- SCRIPT_DIR defines the path for the `Scripts` folder
 
 You can also change the following variables for some advanced configuration
 (some of them tweaks the package specification, so refer to the relative
