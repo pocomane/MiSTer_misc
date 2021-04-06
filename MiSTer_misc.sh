@@ -1,7 +1,6 @@
 #/usr/bin/env bash
 
 TREE_PATH="/media/fat"
-# TREE_PATH="/media/data/temp/MiSTer_misc_test"
 SCRIPT_SUB="Scripts"
 MISC_SUB="misc"
 PACKAGE_UPDATER_OWNER="pocomane"
@@ -9,6 +8,9 @@ PACKAGE_UPDATER_NAME="MiSTer_misc"
 HOOK_SUB="hook"
 ACTION_HOOK="action"
 BOOT_HOOK="boot"
+
+# DEBUG="true"
+# DEBUG_TREE_PATH="/media/data/temp/MiSTer_misc_test"
 
 # ---------------------------------------------------------------------------------
 
@@ -36,6 +38,10 @@ us_is_default_argument() {
 }
 
 us_set_package_info() {
+
+  if [ "$DEBUG" == "true" ]; then
+    TREE_PATH="$DEBUG_TREE_PATH"
+  fi
 
   PACKAGE_OWNER="$1"
   PACKAGE_NAME="$2"
@@ -66,9 +72,9 @@ us_set_package_info() {
 
   SCRIPT_DIR="$TREE_PATH/$SCRIPT_SUB"
 
+  PACKAGE_REPO_SERVER="https://github.com"
   PACKAGE_REPO="$PACKAGE_OWNER/$PACKAGE_NAME"
-  PACKAGE_REPO_URL="https://github.com/$PACKAGE_REPO"
-  PACKAGE_REPO_API="https://api.github.com/repos/$PACKAGE_REPO"
+  PACKAGE_REPO_URL="$PACKAGE_REPO_SERVER/$PACKAGE_REPO"
   PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_WORKING_DIR="$TREE_PATH/$MISC_SUB/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
@@ -97,7 +103,8 @@ us_install(){
   cd "$PACKAGE_WORKING_DIR" ||die "can not enter in the working direrctory '$PACKAGE_WORKING_DIR'"
 
   # download
-  PACK_LIST=$($CURL -L -s $PACKAGE_REPO_API/releases/latest | sed -ne 's|^[ "]*browser_download_url[ "]*:[ "]*\([^"]*\)[ ",\t]*$|\1|p')
+
+  PACK_LIST=$($CURL -L -s "$PACKAGE_REPO_URL/releases/latest" | grep 'href="/'"$PACKAGE_REPO"'/releases/download/' | sed 's#.*href="\([^"]*\)".*#'"$PACKAGE_REPO_SERVER"'\1#g')
   PACK_URL=$(echo "$PACK_LIST" | grep "$PACKAGE_PATTERN" | head -n 1)
   PACKAGE_INFO="repo '$PACKAGE_REPO_URL' / file '$PACK_URL'"
   $CURL "$PACK_URL" -o "$TMPFILE" ||die "can not download $PACKAGE_INFO"
@@ -105,7 +112,8 @@ us_install(){
   # extract
   case $PACKAGE_TYPE in
     "bare")
-      echo -n "" # nothing to do
+      # mv "$TMPFILE" "$(echo "$PACK_URL" | sed 's:^.*/::')"
+      mv "$TMPFILE" "$PACKAGE_PATTERN"
       ;;
     "uudecode.xz")
       uudecode -o "$TMPFILE.xz" "$TMPFILE" ||die "can not unpack $PACKAGE_INFO"
@@ -256,11 +264,13 @@ us_is_updater_installed() {
 us_run_installed_updater() {
   us_set_package_info
 
-  # For release
-  "$PACKAGE_DEFAULT_SCRIPT" $@ ||die
-
-  # For development
-  # us_main_dispatch $@
+  if [ "$DEBUG" == "true" ]; then
+    # for debug: use current script to install packages
+    us_main_dispatch $@
+  else
+    # for release: use the downloaded script to install packages
+    "$PACKAGE_DEFAULT_SCRIPT" $@ ||die
+  fi
 }
 
 us_main_dispatch() {
