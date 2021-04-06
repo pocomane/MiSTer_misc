@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 
 MISC_DIR="/media/fat/misc"
-LINK_DIR="/media/fat/misc/bin"
+LINK_DIR="/media/fat/Scripts"
 SCRIPT_DIR="/media/fat/Scripts"
 PACKAGE_UPDATER_OWNER="pocomane"
 PACKAGE_UPDATER_NAME="MiSTer_misc"
@@ -13,7 +13,7 @@ QUICK_HOOK_NAME="__unnamed__"
 
 # DEBUG="true"
 # DEBUG_MISC_SUB="/media/data/temp/MiSTer_misc_test/misc"
-# DEBUG_LINK_DIR="/media/data/temp/MiSTer_misc_test/bin"
+# DEBUG_LINK_DIR="/media/data/temp/MiSTer_misc_test/Scripts"
 # DEBUG_SCRIPT_DIR="/media/data/temp/MiSTer_misc_test/Scripts"
 
 # ---------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ us_package_do() {
 # PACKAGE LIST
 us_do_for_other() {
   us_package_do "$1" pocomane webkeyboard 'arm.*tar.gz'
-  us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc' bare
+  us_package_do "$1" pocomane MiSTer_Batch_Control 'mbc.tar.gz' . 'mbc'
   us_package_do "$1" nilp0inter MiSTer_WebMenu 'webmenu.sh' uudecode.xz
   us_package_do "$1" pocomane MiSTer_webmenu_package . . 'webmenu'
   # TODO : add ther packages
