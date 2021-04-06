@@ -1,18 +1,21 @@
 #/usr/bin/env bash
 
-SCRIPT_DIR="/media/fat/Scripts"
 MISC_DIR="/media/fat/misc"
+LINK_DIR="/media/fat/misc/bin"
+SCRIPT_DIR="/media/fat/Scripts"
 PACKAGE_UPDATER_OWNER="pocomane"
 PACKAGE_UPDATER_NAME="MiSTer_misc"
 PACKAGE_UPDATER_TYPE="github.master"
 HOOK_SUB="hook"
 ACTION_HOOK="action"
+EXPOSE_HOOK="expose"
 BOOT_HOOK="boot"
 QUICK_HOOK_NAME="__unnamed__"
 
 # DEBUG="true"
-# DEBUG_SCRIPT_DIR="/media/data/temp/MiSTer_misc_test/Scripts"
 # DEBUG_MISC_SUB="/media/data/temp/MiSTer_misc_test/misc"
+# DEBUG_LINK_DIR="/media/data/temp/MiSTer_misc_test/bin"
+# DEBUG_SCRIPT_DIR="/media/data/temp/MiSTer_misc_test/Scripts"
 
 # ---------------------------------------------------------------------------------
 
@@ -43,8 +46,9 @@ us_is_default_argument() {
 us_set_package_info() {
 
   if [ "$DEBUG" == "true" ]; then
-    SCRIPT_DIR="$DEBUG_SCRIPT_DIR"
     MISC_DIR="$DEBUG_MISC_SUB"
+    LINK_DIR="$DEBUG_LINK_DIR"
+    SCRIPT_DIR="$DEBUG_SCRIPT_DIR"
   fi
 
   PACKAGE_OWNER="$1"
@@ -85,22 +89,46 @@ us_set_package_info() {
   PACKAGE_WORKING_DIR="$MISC_DIR/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
   PACKAGE_DEFAULT_SCRIPT="$PACKAGE_WORKING_DIR/$PACKAGE_DEFAULT_SCRIPT_NAME"
+  PACKAGE_EXPOSE="$PACKAGE_WORKING_DIR/$HOOK_SUB/$EXPOSE_HOOK"
   PACKAGE_ACTION="$PACKAGE_WORKING_DIR/$HOOK_SUB/$ACTION_HOOK"
   PACKAGE_BOOT="$PACKAGE_WORKING_DIR/$HOOK_SUB/$BOOT_HOOK"
+}
+
+us_prepare_folder() {
+  if [ "$LINK_DIR" != "" ] ; then
+    mkdir -p "$LINK_DIR" ||die "can not create the link directory '$LINK_DIR'"
+  fi
+  if [ "$SCRIPT_DIR" != "" ] ; then
+    mkdir -p "$SCRIPT_DIR" ||die "can not create the script directory '$SCRIPT_DIR'"
+  fi
 }
 
 us_remove() {
   echo "Removing $PACKAGE_NAME..."
 
-  # Remove action hooks in the Script dir
-  for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-    # Print error when not found, but DO NOT stop the process !
-    FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
-    if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
-      FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}"
-    fi
-    rm "$FULLPATH"
-  done
+  # Remove links for the exposed hooks
+  if [ "$LINK_DIR" != "" ] ; then
+    for HOOK in $(ls "$PACKAGE_EXPOSE" 2>/dev/null) ; do
+      # Print error when not found, but DO NOT stop the process !
+      FULLPATH="$LINK_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
+      if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+        FULLPATH="$LINK_DIR/${PACKAGE_SIMPLENAME}"
+      fi
+      rm "$FULLPATH"
+    done
+  fi
+
+  # Remove script wrappers for the action hooks
+  if [ "$SCRIPT_DIR" != "" ] ; then
+    for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
+      # Print error when not found, but DO NOT stop the process !
+      FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
+      if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+        FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}"
+      fi
+      rm "$FULLPATH"
+    done
+  fi
 
   # Remove package content
   rm -fR "$PACKAGE_WORKING_DIR"
@@ -221,17 +249,32 @@ us_config() {
   if us_is_updater_package; then
     # This is done with a wrapper for other packages, however the Updater is
     # an exception since the "Shortcut" MUST work also withou any installation)
-    us_show_shortcut > "$SCRIPT_DIR/${PACKAGE_NAME}_update.sh" ||die
+    if [ "$SCRIPT_DIR" != "" ] ; then
+      us_show_shortcut > "$SCRIPT_DIR/${PACKAGE_NAME}_update.sh" ||die
+    fi
   else
 
-    # Add action hooks in the Script dir
-    for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-      FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
-      if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
-        FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}" ||die
-      fi
-      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$FULLPATH" ||die
-    done
+    # Add link for the exposed hooks
+    if [ "$LINK_DIR" != "" ] ; then
+      for HOOK in $(ls "$PACKAGE_EXPOSE" 2>/dev/null) ; do
+        FULLPATH="$LINK_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
+        if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+          FULLPATH="$LINK_DIR/${PACKAGE_SIMPLENAME}" ||die
+        fi
+        ln -s "$PACKAGE_EXPOSE/$HOOK" "$FULLPATH" ||die
+      done
+    fi
+
+    # Add script wrappers for the action hooks
+    if [ "$SCRIPT_DIR" != "" ] ; then
+      for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
+        FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
+        if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+          FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}" ||die
+        fi
+        us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$FULLPATH" ||die
+      done
+    fi
   fi
 
   # TODO : other configs ? boot hooks ?
@@ -310,7 +353,7 @@ us_main_dispatch() {
 
       "update")
          us_set_package_info
-         mkdir -p "$SCRIPT_DIR" ||die "can not create the script directory '$SCRIPT_DIR'"
+         us_prepare_folder
 
          if us_is_updater_installed; then
            us_run_installed_updater remove

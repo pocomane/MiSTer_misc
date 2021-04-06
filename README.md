@@ -21,7 +21,7 @@ The features of the script are:
 
 - It is very simple: you can read and fully understand it in minutes
 - The packages are distributed as github repository
-- It automatically creates wrapper scripts to recall package functionality
+- It automatically creates links and wrapper scripts to recall package functionality
 - It keeps the filesystem clean: all the software is installed the `/media/fat/misc` folder
 - TODO : automatic boot script ! ?
 
@@ -72,7 +72,12 @@ be quickly changed in the script, as described in the following sections. The
 `repo_type` defines how download the software from it.
 
 For each installed software, some functionality script are linked in the
-`Scripts` directory to be easly recalled. TODO : implement automatic boot script ! ?
+`Scripts` and `Links` directories to be easly recalled. The difference between
+the two directories is that the `Links` will contain proper links, while the
+`Scripts` one will contain wrapper script that perform some auxiliary work (
+change the current dir, and wait a keypress at the end).
+
+TODO : implement automatic boot script ! ?
 
 # Adapt the script to other devices
 
@@ -84,7 +89,10 @@ change the following variables in the main script
   and forked repo name (in NAME);
 - MISC_DIR defines the `Installation` directory, where the software will be
   copied;
-- SCRIPT_DIR defines the path for the `Scripts` folder
+- SCRIPT_DIR defines the path for the `Scripts` folder; an empty value will
+  disable the creation of the script wrappers;
+- LINK_DIR defines the path for the `Links` folder; an empty value will disable
+  the creation of the links;
 
 You can also change the following variables for some advanced configuration
 (some of them tweaks the package specification, so refer to the relative
@@ -93,9 +101,13 @@ section for more details):
 - PACKAGE_UPDATER_TYPE is the type of repo containing the updater script itself;
   (the default "github.master" should be good for most of the scenarios, see next
   section for other options):
-- HOOK_SUB, ACTION_HOOK and BOOT_HOOK specify which subfolders in a package
-  contain the functionality scripts (HOOK_SUB/ACTION_HOOK subfolder) and the
-  boot scripts (HOOK_SUB/BOOT_HOOK subfolder) (to be implemented yet ! ? );
+- HOOK_SUB - is used in combination with the following EXPOSE_HOOK and ACTION_HOOK
+- EXPOSE_HOOK specifies which subfolder in a package (HOOK_SUB/EXPOSE_HOOK subfolder)
+  contains the scripts to be place in the `Links` folder;
+- ACTION_HOOK specifies which subfolder in a package (HOOK_SUB/ACTION_HOOK
+  subfolder) contains the scripts to be wrapped in `Scripts` directory
+  (HOOK_SUB/ACTION_HOOK subfolder);
+- BOOT_HOOK si not implemented yet ! ? ;
 - QUICK_HOOK_NAME contains the name of the script that will be linked with the
   same name of the package (default is `__unnamed__`, wihout any extension)
 
