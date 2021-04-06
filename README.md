@@ -20,7 +20,7 @@ SOFTWARE.
 The features of the script are:
 
 - It is very simple: you can read and fully understand it in minutes
-- The packages are distributed as github repository (the release pages must be formatted in specific way)
+- The packages are distributed as github repository
 - It automatically creates wrapper scripts to recall package functionality
 - It keeps the filesystem clean: all the software is installed the `/media/fat/misc` folder
 - TODO : automatic boot script ???
@@ -28,7 +28,7 @@ The features of the script are:
 # Installation
 
 To install all the software, you can download the
-[MiSTer_misc_update.sh](https://github.com/pocomane/MiSTer_misc/releases/latest/download/MiSTer_misc_update.sh)
+[MiSTer_misc_update.sh](https://raw.githubusercontent.com/pocomane/MiSTer_misc/master/MiSTer_misc_update.sh)
 to your device and run it. Alternatively you can run
 
 ```
@@ -37,7 +37,7 @@ curl -L -k "https://raw.githubusercontent.com/pocomane/MiSTer_misc/master/MiSTer
 
 in a shell on the target device.
 
-Both the methods will download the last built release and install it in the
+Both the methods will download the last script from the repo and install it in the
 default path: `/media/fat/misc/MiSTer_misc`. It will also generate some script 
 in the default path: `/media/fat/Scripts`. One of this is the updater script
 itself: `/media/fat/Scripts/MiSTer_misc_update.sh`.
