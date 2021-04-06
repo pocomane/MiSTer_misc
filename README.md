@@ -101,12 +101,10 @@ section for more details):
 - PACKAGE_UPDATER_TYPE is the type of repo containing the updater script itself;
   (the default "github.master" should be good for most of the scenarios, see next
   section for other options):
-- HOOK_SUB - is used in combination with the following EXPOSE_HOOK and ACTION_HOOK
-- EXPOSE_HOOK specifies which subfolder in a package (HOOK_SUB/EXPOSE_HOOK subfolder)
-  contains the scripts to be place in the `Links` folder;
-- ACTION_HOOK specifies which subfolder in a package (HOOK_SUB/ACTION_HOOK
-  subfolder) contains the scripts to be wrapped in `Scripts` directory
-  (HOOK_SUB/ACTION_HOOK subfolder);
+- EXPOSE_HOOK specifies which subfolder in a package contains the scripts to be
+  place in the `Links` folder;
+- ACTION_HOOK specifies which subfolder in a package contains the scripts to be
+  wrapped in `Scripts` directory;
 - BOOT_HOOK si not implemented yet ! ? ;
 - QUICK_HOOK_NAME contains the name of the script that will be linked with the
   same name of the package (default is `__unnamed__`, wihout any extension)
