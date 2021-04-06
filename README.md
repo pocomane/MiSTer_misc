@@ -77,21 +77,28 @@ For each installed software, some functionality script are linked in the
 # Adapt the script to other devices
 
 To adapt the script to other device and software, you can fork this repo, and
-change the following variables in the main script:
+change the following variables in the main script
 
 - PACKAGE_UPDATER_OWNER and NAME define the github repo of the owner of the
   uptade script itself; you should place here you github username (in OWNER)
   and forked repo name (in NAME);
-- PACKAGE_UPDATER_TYPE is the type of repo containing the updater script itself;
-  (the default "github.master" should be good for most of the scenarios, see next
-  section for other options):
 - TREE_PATH and MISC_SUB together defines where the software will be installed; the
   desitnation is the MISC_SUB folder in the TREE_PATH directory;
 - SCRIPT_SUB defines the path for the `Scripts` folder (it will be
   TREE_PATH/SCRIPT_SUB);
+
+You can also change the following variables for some advanced configuration
+(some of them tweaks the package specification, so refer to the relative
+section for more details):
+
+- PACKAGE_UPDATER_TYPE is the type of repo containing the updater script itself;
+  (the default "github.master" should be good for most of the scenarios, see next
+  section for other options):
 - HOOK_SUB, ACTION_HOOK and BOOT_HOOK specify which subfolders in a package
   contain the functionality scripts (HOOK_SUB/ACTION_HOOK subfolder) and the
   boot scripts (HOOK_SUB/BOOT_HOOK subfolder) (to be implemented yet ! ? );
+- QUICK_HOOK_NAME contains the name of the script that will be linked with the
+  same name of the package (default is `__unnamed__`, wihout any extension)
 
 After that you have to find the package list definition function: just search
 for `PACKAGE LIST` to find it. You have to clean-up the function and refill it
@@ -146,7 +153,9 @@ special way:
   folder, to be quickly searched and launched; the content of the `package_name` is
   used as prefix for the target name, so, for example, if two packages `pkg_a`
   and `pkg_b` provide a `start.sh` script, in the desired subfolder you will
-  fined two files `pkg_a_start.sh`, `pkg_b_start.sh`
+  fined two files `pkg_a_start.sh`, `pkg_b_start.sh`; the `__unnamed__` script
+  is a special case since it will be linked in `pkg_a` or `pkg_b` without any
+  suffix;
 
 - hook/boot - it is currently ignored (to be implemented yet ! ? )
 

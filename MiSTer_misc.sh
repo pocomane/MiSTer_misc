@@ -9,6 +9,7 @@ PACKAGE_UPDATER_TYPE="github.master"
 HOOK_SUB="hook"
 ACTION_HOOK="action"
 BOOT_HOOK="boot"
+QUICK_HOOK_NAME="__unnamed__"
 
 # DEBUG="true"
 # DEBUG_TREE_PATH="/media/data/temp/MiSTer_misc_test"
@@ -95,7 +96,11 @@ us_remove() {
   # Remove action hooks in the Script dir
   for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
     # Print error when not found, but DO NOT stop the process !
-    rm "$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
+    FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK"
+    if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+      FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}"
+    fi
+    rm "$FULLPATH"
   done
 
   # Remove package content
@@ -197,7 +202,7 @@ us_generate_wrapper() {
 cat << EOF
 #!/usr/bin/env bash
   cd "$PACKAGE_WORKING_DIR"
-  "$1"
+  "$1" \$@
   EXIT_CODE="\$?"
   read -n 1 -s -r -p "Press any key to continue"
   echo ""
@@ -222,7 +227,11 @@ us_config() {
 
     # Add action hooks in the Script dir
     for HOOK in $(ls "$PACKAGE_ACTION" 2>/dev/null) ; do
-      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
+      FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}_$HOOK" ||die
+      if [ "$HOOK" = "$QUICK_HOOK_NAME" ] ; then
+        FULLPATH="$SCRIPT_DIR/${PACKAGE_SIMPLENAME}" ||die
+      fi
+      us_generate_wrapper "$PACKAGE_ACTION/$HOOK" > "$FULLPATH" ||die
     done
   fi
 
