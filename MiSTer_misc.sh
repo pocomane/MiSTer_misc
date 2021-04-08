@@ -244,6 +244,7 @@ us_is_updater_package(){
 }
 
 us_config() {
+  echo "Configuring $PACKAGE_NAME..."
 
   if us_is_updater_package; then
     # This is done with a wrapper for other packages, however the Updater is
@@ -291,7 +292,21 @@ us_package_do() {
   # file) when no other parameter are given
   us_set_package_info $@
 
-  "us_$ACTION"
+  case $ACTION in
+    "install")
+      us_install
+      ;;
+    "remove")
+      us_remove
+      ;;
+    "config")
+      us_config
+      ;;
+    *)
+      echo "Invalid action '$1'"
+      exit -1;
+      ;;
+  esac
 }
 
 # PACKAGE LIST
