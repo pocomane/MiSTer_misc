@@ -82,8 +82,10 @@ us_set_package_info() {
   fi
 
   PACKAGE_REPO_SERVER="https://github.com"
+  PACKAGE_REPO_API_SERVER="https://api.github.com/repos"
   PACKAGE_REPO="$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_REPO_URL="$PACKAGE_REPO_SERVER/$PACKAGE_REPO"
+  PACKAGE_REPO_API_URL="$PACKAGE_REPO_API_SERVER/$PACKAGE_REPO"
   PACKAGE_REPO_CONTENT="https://raw.githubusercontent.com/$PACKAGE_OWNER/$PACKAGE_NAME"
   PACKAGE_WORKING_DIR="$MISC_DIR/$PACKAGE_NAME"
   PACKAGE_DEFAULT_SCRIPT_NAME="$PACKAGE_NAME.sh"
@@ -145,7 +147,7 @@ us_install(){
       PACK_URL="$PACKAGE_REPO_URL/archive/refs/heads/master.zip"
       ;;
     *)
-      PACK_LIST=$($CURL -L -s "$PACKAGE_REPO_URL/releases/latest" | grep 'href="/'"$PACKAGE_REPO"'/releases/download/' | sed 's#.*href="\([^"]*\)".*#'"$PACKAGE_REPO_SERVER"'\1#g')
+      PACK_LIST=$($CURL -L -s "$PACKAGE_REPO_API_URL/releases/latest" | grep '"browser_download_url"' | sed 's:.*"\(.*\)"[^"]*:\1:g')
       PACK_URL=$(echo "$PACK_LIST" | grep "$PACKAGE_PATTERN" | head -n 1)
       PACKAGE_INFO="repo '$PACKAGE_REPO_URL' / file '$PACK_URL'"
       ;;
